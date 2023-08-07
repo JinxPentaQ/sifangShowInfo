@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="white_bg">
       <div style="padding:14px 24px 14px 24px;">
-        <p>Chain type</p>
+        <!-- <p>Chain type</p> -->
         <!-- <van-tabs type="card" v-model="active" @click="qrchange">
           <van-tab title="btc">
             <div id="btcr"></div>
@@ -253,7 +253,6 @@ export default {
       line-height: 30px;
     }
     .amount_amount {
-      float: right;
       color: #f56c6c;
       font-size: 24px;
     }

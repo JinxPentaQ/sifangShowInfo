@@ -51,7 +51,8 @@ export default {
             this.$router.push({ path: "btc", query: { time: this.str } });
             clearInterval(this.timer);
           }else {
-            window.open(res.data.data.address)
+            window.open(res.data.data.address);
+            clearInterval(this.timer);
           }
         })
         .catch(err => {

@@ -1,2 +1,5 @@
 node_modules
 .idea
+dist/.htaccess
+dist/.user.ini
+dist/404.html

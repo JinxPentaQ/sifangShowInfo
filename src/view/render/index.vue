@@ -51,10 +51,7 @@ export default {
         // .post("index.php?s=OTCUser.pcode&time=" + this.str)
         .get("PageController/getOngoingOrder?order_no=" + this.str)
         .then((res) => {
-          if (
-            res.data.data.status === "待接单" ||
-            res.data.data.status === "进行中"
-          ) {
+          if (res.data.data.status === "进行中") {
             if (res.data.data.pay_info_type === 1) {
               this.$router.push({ path: "btc", query: { time: this.str } });
               clearInterval(this.timer);
@@ -62,6 +59,10 @@ export default {
               window.open(res.data.data.address, "_self");
               clearInterval(this.timer);
             }
+          } else if (res.data.data.status === "待接单") {
+            console.log(res.data.data.status);
+          } else {
+            clearInterval(this.timer);
           }
         })
         .catch((err) => {

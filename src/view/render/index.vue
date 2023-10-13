@@ -1,15 +1,19 @@
 <template>
   <div class="wrap">
-    <div style="text-align:center;margin-top:100px;">
-      <van-loading size="24px" style="dislplay:inline-block"> </van-loading>
-        您好，您该笔订单的入款信息正在火速为您准备中，
-        <br/>
-        请不要关闭该页面。
-        <br/>
-        稍后会显示在该页面中，谢谢您耐心的等待！
-        <br/>
-        倒计时：(
-        <van-count-down :time="time" format=" ss" style="dislplay:inline-block" />)
+    <div style="text-align: center; margin-top: 100px">
+      <van-loading size="24px" style="dislplay: inline-block"> </van-loading>
+      您好，您该笔订单的入款信息正在火速为您准备中，
+      <br />
+      请不要关闭该页面。
+      <br />
+      稍后会显示在该页面中，谢谢您耐心的等待！
+      <br />
+      倒计时：(
+      <van-count-down
+        :time="time"
+        format=" ss"
+        style="dislplay: inline-block"
+      />)
     </div>
   </div>
 </template>
@@ -22,13 +26,13 @@ export default {
     [CountDown.name]: CountDown,
     [Icon.name]: Icon,
     [Toast.name]: Toast,
-    [Loading.name]: Loading
+    [Loading.name]: Loading,
   },
   data() {
     return {
       str: "",
       timer: "",
-      time: 99000
+      time: 99000,
     };
   },
 
@@ -37,7 +41,7 @@ export default {
     getQueryString() {
       this.str = window.location.href.split("?")[1]; //获取url中"?"符后的字串
       if (this.str) {
-        this.getData();
+        this.timer = setInterval(this.getData, 3000);
       }
     },
     //获取信息
@@ -46,24 +50,29 @@ export default {
       _this.$axios
         // .post("index.php?s=OTCUser.pcode&time=" + this.str)
         .get("PageController/getOngoingOrder?order_no=" + this.str)
-        .then(res => {
-          if(res.data.data.pay_info_type === 1) {
-            this.$router.push({ path: "btc", query: { time: this.str } });
-            clearInterval(this.timer);
-          }else {
-            window.open(res.data.data.address);
+        .then((res) => {
+          if (res.data.data.status === "进行中") {
+            if (res.data.data.pay_info_type === 1) {
+              this.$router.push({ path: "btc", query: { time: this.str } });
+              clearInterval(this.timer);
+            } else {
+              window.open(res.data.data.address, "_self");
+              clearInterval(this.timer);
+            }
+          } else if (res.data.data.status === "待接单") {
+            console.log(res.data.data.status);
+          } else {
             clearInterval(this.timer);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
-    }
+    },
   },
   mounted() {
     this.getQueryString();
-    this.timer = setInterval(this.getData, 5000);
-  }
+  },
 };
 </script>
 
